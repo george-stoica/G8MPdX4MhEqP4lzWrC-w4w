@@ -31,7 +31,12 @@
 		yield this.manager.initializeAsync().then ( function () {
 			console.log( 'initialized' );
 		}).catch(function ( err ) {
-			console.log ( err );
+			console.log ( err.stack );
+			
+			// close current connection on error
+			this.manager.closeConnectionAsync ().catch( function ( err ) {
+				console.log ( err.stack );
+			});
 		});
 
 		return this.manager.saveAsync ( exchangeRateEntry );
@@ -42,7 +47,7 @@
 			console.log ('Closed DB connection...');
 			return true;
 		}).catch ( function ( err ) {
-			console.log (err);
+			console.log ( err.stack );
 			return false;
 		});
 	}

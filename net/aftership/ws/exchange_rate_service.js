@@ -2,9 +2,9 @@
 
 	'use strict'
 
-	 const WEB_SERVICE_URI = 'http://apilayer.net/api/live?access_key=';
-	 const API_KEY = '925fc1eb1e30523a9b472acea5d6c219';
-	 const WEB_SERVICE_API_URL = WEB_SERVICE_URI + API_KEY; // performance reasons
+	var WEB_SERVICE_URI = 'http://apilayer.net/api/live?access_key=';
+	var API_KEY = '925fc1eb1e30523a9b472acea5d6c219';
+	var WEB_SERVICE_API_URL = WEB_SERVICE_URI + API_KEY; // performance reasons
 	var request = require ( 'request' );
 
 	var response_handler;
@@ -23,7 +23,7 @@
 
 			if ( error || response.statusCode != 200 ) {
 				console.log ( 'error:' + error );
-				console.log ( 'resp:' + response );
+				//console.log ( 'resp:' + response );
 				return callback ( error );
 			}
 

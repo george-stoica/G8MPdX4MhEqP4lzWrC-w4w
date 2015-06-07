@@ -2,14 +2,11 @@
 
 	'use strict'
 
-	const db_config = require ( '../../config/persistence.config' );
-	const promise = require( 'bluebird' );
-	const mongoose = require ( 'mongoose' );
-
-	var db_uri;
-	var datasource_name;
+	var db_config = require ( '../../config/persistence.config' );
+	var promise = require ( 'bluebird' );
+	var mongoose = require ( 'mongoose' );
 	var conn;
-	//var db_config;
+	var ExchangeRateModel;
 
 	function MongooseDbManager ( db_config ) {
 
@@ -39,21 +36,23 @@
 		this.conn.on ( 'open', function ( cb ) {
 			console.log ( ' connected to DB ... ' );
 			
-			let dbSchema = mongoose.Schema ( {
+			console.log ( 'Saving to collection: ' + self.db_config.collection_id );
+			
+			if ( !this.ExchangeRateModel ) {
+				var dbSchema = mongoose.Schema ( {
 					from: String,
 					to: String,
 					created_at: { type: Date, default: Date.now },
-					rate: Number
-			});
+					rate: String,
+				});
+				
+				this.ExchangeRateModel = mongoose.model ( self.db_config.collection_id, dbSchema );
+			}
 			
-			console.log ( 'Saving to collection: ' + self.db_config.collection_id );
+			promise.promisifyAll ( this.ExchangeRateModel );
+			promise.promisifyAll ( this.ExchangeRateModel.prototype );
 			
-			let ExchangeRateModel = mongoose.model ( self.db_config.collection_id, dbSchema );
-			
-			promise.promisifyAll ( ExchangeRateModel );
-			promise.promisifyAll ( ExchangeRateModel.prototype );
-			
-			let exchRateEntry = new ExchangeRateModel ( {
+			var exchRateEntry = new this.ExchangeRateModel ( {
 														from: exchangeRateEntry.from,
 														to: exchangeRateEntry.to,
 														rate: exchangeRateEntry.rate,
@@ -72,14 +71,18 @@
 	}
 
 	MongooseDbManager.prototype.closeConnection = function ( callback ) {
-
-		if ( this.conn ) {
-			this.conn.close ( function ( error ) {
+		var self = this;
+		
+		if ( self.conn ) {
+			self.conn.close ( function ( error ) {
 
 				if ( error ) {
 					return callback ( error );
 				}
-
+				
+				self.conn = null;
+				self.exchange_rate_model = null;
+				
 				callback ( null );
 			} );
 		}

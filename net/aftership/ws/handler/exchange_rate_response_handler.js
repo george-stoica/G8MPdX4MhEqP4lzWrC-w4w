@@ -17,7 +17,7 @@
 
 		let currencyExch = JSON.parse ( response );
 
-		console.log ( currencyExch );
+		//console.log ( currencyExch );
 
 		// get USD to HKD rate
 		let rateKey = '' + quoteRequest.from + quoteRequest.to;
