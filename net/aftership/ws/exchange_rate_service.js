@@ -8,16 +8,15 @@
 	var request = require ( 'request' );
 
 	var response_handler;
-	var self;
 
 	function ExchangeRateService ( response_handler ) {
-
+		console.log ('creating XR service with handler ' + response_handler);
 		this.response_handler = response_handler;
-		self = this;
 	}
 
 	ExchangeRateService.prototype.getCurrencyRate = function ( quoteRequest, callback ) {
-
+		var self = this;
+		
 		console.log ( 'sending request...' );
 		request ( WEB_SERVICE_API_URL, function ( error, response, body ) {
 
@@ -27,9 +26,12 @@
 				return callback ( error );
 			}
 
-			// console.log ( 'body:' + body );
-
 			// parse response
+			var computedRate = self.response_handler.getRate ( quoteRequest, body );
+			
+			if ( !computedRate ) {
+				return callback ( new Error ( ' Error parsing the web service response' ) );
+			}
 			callback ( null, self.response_handler.getRate ( quoteRequest, body ) );
 		} );
 	}

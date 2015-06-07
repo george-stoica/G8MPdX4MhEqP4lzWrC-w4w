@@ -26,7 +26,7 @@
 		promise.promisifyAll ( this.manager );
 	}
 
-	DatabaseManager.prototype.save = co.wrap(function *(exchangeRateEntry) {
+	DatabaseManager.prototype.save = co.wrap(function *(exchangeRateEntry, callback) {
 		// make sure the db connection has been initialized
 		yield this.manager.initializeAsync().then ( function () {
 			console.log( 'initialized' );
@@ -36,9 +36,14 @@
 			// close current connection on error
 			this.manager.closeConnectionAsync ().catch( function ( err ) {
 				console.log ( err.stack );
+				return err;
 			});
+			console.log('BEFORE SAVE');
+			//callback ( err );
+			return err;
 		});
 
+		//callback ( null, this.manager.saveAsync ( exchangeRateEntry ) );
 		return this.manager.saveAsync ( exchangeRateEntry );
 	});
 

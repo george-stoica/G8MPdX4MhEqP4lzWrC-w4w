@@ -5,9 +5,11 @@ var job_config = {
 		delay: 0,
 		ttr: 60,	
 		job: {
-			from: 'HKD',
-			to: 'USD',
+			from: 'USD',
+			to: 'HKD',
 			type: 'exchange_rate_handler',
+			succeeded_attempts:0,
+			failed_attempts:0
 		}
 	};
 

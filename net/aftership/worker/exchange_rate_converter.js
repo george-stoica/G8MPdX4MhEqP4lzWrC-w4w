@@ -44,8 +44,9 @@
 		var start = new Date ().getTime ();
 
 		function putJobBack ( delay ) {
-
-			self.client.put ( fivebeans.client.LOWEST_PRIORITY, delay, 60, JSON.stringify ( job ), function ( err, new_job_id ) {
+			console.log ( 'Delaying job by ' + delay );
+			//fivebeans.client.LOWEST_PRIORITY
+			self.client.put ( 0, delay, 60, JSON.stringify ( job ), function ( err, new_job_id ) {
 
 				if ( err ) self.emitWarning ( {
 				    message : 'error putting job back',
@@ -79,7 +80,7 @@
 					if ( response ) {
 						putJobBack ( parseInt ( response ) );
 					}
-
+					self.deleteAndMoveOn(jobID);
 					break;
 
 				default:

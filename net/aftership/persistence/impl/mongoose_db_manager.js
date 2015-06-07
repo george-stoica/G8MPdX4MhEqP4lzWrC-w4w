@@ -14,17 +14,18 @@
 	}
 
 	MongooseDbManager.prototype.initialize = function ( callback ) {
-
-		if ( !this.conn ) {
-			// 'mongodb://george:password@ds037581.mongolab.com:37581/aftership'
-			mongoose.connect ( this.db_config.db_uri, function ( error ) {
-
-				return callback ( error );
-			} );
-
-			this.conn = mongoose.connection;
-			callback ( null );
-		}
+		console.log ( 'Initializing DB...' );
+		
+		mongoose.connect ( this.db_config.db_uri, function ( error ) {
+			return callback ( error );
+		} );
+		//console.log('MONGOOSE: ' + mongoose.connection);
+		//console.log('MONGOOSE2: ' + this.conn);
+		this.conn = mongoose.connection;
+		
+		
+		console.log('return');
+		callback ( null );
 	}
 
 	MongooseDbManager.prototype.save = function ( exchangeRateEntry, callback ) {
@@ -59,32 +60,38 @@
 													});
 													
 			exchRateEntry.saveAsync ().spread ( function ( exchRate ) {
-			console.log( 'Saved to db rate: ' + exchRate.rate );
+				console.log( 'Saved to db rate: ' + exchRate.rate );
 			}).then( function () {
 				//self.conn.close ();
+				
 				callback (null, 'done');
 			}).catch ( function ( error ) {
-				console.log ( error );
 				callback (error);
 			});		
 		});
 	}
 
+	/**
+	* @deprecated
+	* Use with caution.
+	*/
 	MongooseDbManager.prototype.closeConnection = function ( callback ) {
 		var self = this;
 		
 		if ( self.conn ) {
-			self.conn.close ( function ( error ) {
+		
+			mongoose.disconnect();
+		//	self.conn.close ( function ( error ) {
 
-				if ( error ) {
-					return callback ( error );
-				}
+		//		if ( error ) {
+		//			return callback ( error );
+		//		}
 				
-				self.conn = null;
-				self.exchange_rate_model = null;
+		//		self.conn = null;
+		//		self.exchange_rate_model = null;
 				
 				callback ( null );
-			} );
+		//	} );
 		}
 	}
 
