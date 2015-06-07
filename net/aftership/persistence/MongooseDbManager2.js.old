@@ -1,0 +1,60 @@
+	'use strict'
+	
+	const db_config = require ('../config/persistence.config');
+	const promise = require('bluebird');
+	const mongoose = require ('mongoose');
+
+	var db_uri;
+	var datasource_name;
+	var conn;
+	
+	function MongooseDbManager2 () {}
+	
+	MongooseDbManager2.prototype.initialize = function (callback) {
+		if (!this.conn) {
+			// 'mongodb://george:password@ds037581.mongolab.com:37581/aftership'
+			mongoose.connect (db_config.db_uri, function (error) {
+				return callback (error);
+			});
+			
+			this.conn = mongoose.connection;
+		}
+	}
+	
+	MongooseDbManager2.prototype.save = function (exchangeRateEntry, callback) {
+
+		this.conn.on ( 'error', console.error.bind(console, 'connection error:') );
+		this.conn.on ( 'open', function (cb) {
+			console.log ( ' connected to DB ... ' );
+			
+			let dbSchema = mongoose.Schema ( {
+					from: String,
+					to: String,
+					created_at: { type: Date, default: Date.now },
+					rate: Number
+			});
+			
+			let ExchangeRateModel = mongoose.model ( 'ExchangeRate', dbSchema );
+			
+			promise.promisifyAll (ExchangeRateModel);
+			promise.promisifyAll (ExchangeRateModel.prototype);
+			
+			let exchRateEntry = new ExchangeRateModel ( {
+														from: exchangeRateEntry.source_currency,
+														to: exchangeRateEntry.target_currency,
+														rate: exchangeRateEntry.rate,
+													});
+													
+			exchRateEntry.saveAsync ().spread ( function ( exchRate ) {
+				console.log( 'Saved to db rate: ' + exchRate.rate );
+			}).then( function () {
+				this.conn.close ();
+				callback (null, 'done');
+			}).catch ( function ( error ) {
+				console.log ( error );
+				callback (error);
+			});
+		
+		});
+	}
+	module.exports = MongooseDbManager2;
