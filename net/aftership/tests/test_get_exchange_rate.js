@@ -1,6 +1,6 @@
 const promise = require ('bluebird');
-const ExchangeRateService = require ('./ws/ExchangeRateService');
-const ExchangeRateResponseHandler = require ('./ws/handler/ExchangeRateResponseHandler');
+const ExchangeRateService = require ('./ws/exchange_rate_service');
+const ExchangeRateResponseHandler = require ('./ws/handler/exchange_rate_response_handler');
 
 var handler = new ExchangeRateResponseHandler ();
 var exch_rate_service = new ExchangeRateService (handler);
