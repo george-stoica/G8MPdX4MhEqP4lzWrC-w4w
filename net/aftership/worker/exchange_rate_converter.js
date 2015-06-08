@@ -1,3 +1,7 @@
+/**
+* FiveBeans worker. Gets the current exchange rate from web service then saves it to DB.
+* @typedef {object} ExchangeRateConverter
+*/
 ( function () {
 
 	var fivebeans = require ( 'fivebeans' );
@@ -9,10 +13,13 @@
 
 	var FiveBeansWorker = fivebeans.worker;
 
+	/**
+	* @constructor
+	* Creates a new ExchangeRateConverter instance.
+	* @ param {object} params - worker options.
+	* @constructor
+	*/
 	function ExchangeRateConverter ( params ) {
-
-		//var maxSuccessAttempts = config.max_job_successful_attempts || 10;
-		//var maxFailedAttempts = config.max_job_failed_attempts || 3;
 
 		// initialize FiveBeansWorker
 		var init_options = {
@@ -28,7 +35,7 @@
 	}
 
 	/**
-	 * do initial setup
+	 * do initial setup.
 	 */
 	( function () {
 
@@ -38,18 +45,24 @@
 		ExchangeRateConverter.prototype.lookupHandler = undefined;
 	} () )
 
+	/**
+	* Override FiveBeansWorker's runJob method to process specific cases.
+	*/
 	ExchangeRateConverter.prototype.runJob = function ( jobID, job ) {
 
 		var self = this;
-		var start = new Date ().getTime ();
+		var start_time = new Date ().getTime ();
 
-		function putJobBack ( delay ) {
+		/**
+		* put job on the tube with low priority
+		*/
+		function putJobOnTube ( delay ) {
 			console.log ( 'Delaying job by ' + delay );
-			//fivebeans.client.LOWEST_PRIORITY
-			self.client.put ( 0, delay, 60, JSON.stringify ( job ), function ( err, new_job_id ) {
+			
+			self.client.put ( fivebeans.client.LOWEST_PRIORITY, delay, 60, JSON.stringify ( job ), function ( err, new_job_id ) {
 
 				if ( err ) self.emitWarning ( {
-				    message : 'error putting job back',
+				    message : 'Error while attempting to put job back',
 				    id : jobID,
 				    error : err
 				} );
@@ -57,46 +70,53 @@
 		}
 
 		try {
-			self.handler.work ( job, function ( result, response ) {
+		
+			// start processing the job
+			self.handler.work ( job, function ( result, delay ) {
 
-				var elapsed = new Date ().getTime () - start;
+				var time_elapsed = new Date ().getTime () - start_time;
 
 				self.emit ( 'job.handled', {
 				    id : jobID,
-				    elapsed : elapsed,
+				    elapsed : time_elapsed,
 				    result : result
 				} );
 
 				switch ( result ) {
-				case 'success':
-					self.emitInfo ( 'Successfully handled a job: ' + jobID );
+				case self.handler.RESPONSE_SUCCESS:
+
+					self.emitInfo ( 'Successfully handled job: ' + jobID );
 					self.deleteAndMoveOn ( jobID );
 					break;
-				// case 'bury':
-				//					
-				// break;
-				case 'release':
+
+				case self.handler.RESPONSE_RELEASE:
+				
 					self.emitInfo ( 'Released Job: ' + jobID );
-					if ( response ) {
-						putJobBack ( parseInt ( response ) );
+					// if delay is provided, put job back with the specified delay.
+					if ( delay ) {
+						putJobOnTube ( parseInt ( delay ) );
 					}
+					
 					self.deleteAndMoveOn(jobID);
 					break;
 
 				default:
+
 					self.buryAndMoveOn ( jobID );
 					break;
 				}
 			} );
-		} catch ( e ) {
+
+		} catch ( err ) {
 			self.emitWarning ( {
-			    message : 'exception in job handler',
+			    message : 'Exception occurred in job handler',
 			    id : jobID,
-			    error : e
+			    error : err
 			} );
+			
 			self.buryAndMoveOn ( jobID );
 		}
 	}
 
 	module.exports = ExchangeRateConverter;
-} () )
+}())

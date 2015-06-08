@@ -1,3 +1,76 @@
+## Worker implementation
+---
+##### Package structure
+```
+[net]
+    |_ [aftership]
+            |
+            |_  [config]
+            |_______   beanstalk.config
+            |_______   persistence.config
+            |_  [handler]
+            |_______   exchange_rate_job_handler.js
+            |_  [persistence]
+            |_______   database_manager.js
+            |_______   [impl]
+                            |_____ mongoose_db_manager.js
+            |_  [tests]
+            |_  [worker]
+            |_______   exchange_rate_converter.js
+            |_  [ws]
+            |_______   exchange_rate_service.js
+            |_______   [handler]
+                            |_____ exchange_rate_response_handler.js
+```
+`config` - worker configuration files
+
+`handler` - fivebeans worker handler implementation
+
+`persistence` - database communication implementations
+
+`worker` - fivebeans worker implementation
+
+`ws` - Exchange rate web service implementation
+
+`ws/handler` - web service response handler
+
+##### Dependencies
+The following dependencies are required:
+* co
+* bluebird
+* fivebeans
+* accounting
+* mongoose
+
+
+#### Job payload
+
+```
+{
+    from: 'USD',
+    to: 'HKD',
+	succeeded_attempts: 0,
+	failed_attempts: 0
+}
+```
+The `succeeded_attempts` and `failed_attempts` properties are used to persist the attempts counter values when working in a distributed environment.
+
+Different workers can process the same job but the success and fail counters should not be reset.
+
+
+#### Installation
+Run the following command to install dependencies.
+```
+node install
+```
+
+#### Note
+The worker should be executed using the `--harmony` command line parameter because of the use of generators in the source code:
+
+```
+node --harmony [start workers].js
+```
+
 ## The challenge
 ---
 
