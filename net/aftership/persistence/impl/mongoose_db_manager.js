@@ -19,9 +19,37 @@
 	* @constructor
 	*/
 	function MongooseDbManager ( db_config ) {
-
+		var self = this;
 		this.db_config = db_config;
+		
+		// open db connection
+		console.log ( 'Initializing DB...' );
+		
+		mongoose.connect ( db_config.db_uri );
+		
+		var connection = mongoose.connection;
+		
+			connection.on ( 'open', function ( cb ) {
+			console.log ( ' connected to DB ... ' );
 
+			if ( !self.ExchangeRateModel ) {
+				
+				// create schema
+				var dbSchema = mongoose.Schema ( {
+					from: String,
+					to: String,
+					created_at: { type: Date, default: Date.now },
+					rate: String,
+				});
+				
+				// initialize model
+				self.ExchangeRateModel = mongoose.model ( db_config.collection_id, dbSchema );
+
+				// initialize the use of promises with mongoose model.
+				promise.promisifyAll ( self.ExchangeRateModel );
+				promise.promisifyAll ( self.ExchangeRateModel.prototype );
+			}
+		});
 	}
 
 	/**
@@ -40,6 +68,7 @@
 		
 		console.log('return');
 		callback ( null );
+		
 	}
 
 	/**
@@ -48,50 +77,18 @@
 	* @callback callback ( error, data )
 	*/
 	MongooseDbManager.prototype.save = function ( exchangeRateEntry, callback ) {
-		var self = this;
-		
-		// open db connection
-		console.log ( 'Initializing DB...' );
-		
-		mongoose.connect ( this.db_config.db_uri, function ( error ) {
-			return callback ( error );
-		} );
-		
-		var connection = mongoose.connection;
-		
-		connection.on ( 'error', function ( error ) {
-			return callback( error );
-		});
-		
-		connection.on ( 'open', function ( cb ) {
-			console.log ( ' connected to DB ... ' );
+			console.log ( 'SAVING DB...' + this.ExchangeRateModel );
 			
-			console.log ( 'Saving to collection: ' + self.db_config.collection_id );
-			
-			//@FIXME - this might be unnecessary since the DB connection is closed after each save now.
-			if ( !this.ExchangeRateModel ) {
-			
-				// create schema
-				var dbSchema = mongoose.Schema ( {
-					from: String,
-					to: String,
-					created_at: { type: Date, default: Date.now },
-					rate: String,
-				});
-				
-				// initialize model
-				this.ExchangeRateModel = mongoose.model ( self.db_config.collection_id, dbSchema );
-			}
-			
-			// initialize the use of promises with mongoose model.
-			promise.promisifyAll ( this.ExchangeRateModel );
-			promise.promisifyAll ( this.ExchangeRateModel.prototype );
 
+				
+			var self = this;
+		
 			var exchRateEntry = new this.ExchangeRateModel ( {
 														from: exchangeRateEntry.from,
 														to: exchangeRateEntry.to,
 														rate: exchangeRateEntry.rate,
 													});
+
 			// save data to DB
 			// @FIXME - should this run async?
 			exchRateEntry.saveAsync ().spread ( function ( exchRate ) {
@@ -101,15 +98,15 @@
 			}).then( function () { // do additional maintenance after successful save
 
 				// close connection to DB
-				self.closeConnection ();
-
+				//self.closeConnection ();
+				console.log('saved');
 				// return with success
 				callback (null, 'done');
 			}).catch ( function ( error ) {
+			console.log('error saving' + error);
 				// return with error
 				callback (error);
-			});		
-		});
+			});	
 	}
 
 	/**

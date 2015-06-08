@@ -8,10 +8,10 @@
 
 	'use strict'
 
-	 const db_config = require ('../config/persistence.config');
-	 const co = require ('co');
-	 const promise = require ('bluebird');
-	 const MongooseDbManager = require ('./impl/mongoose_db_manager');
+	 var db_config = require ('../config/persistence.config');
+	 var co = require ('co');
+	 var promise = require ('bluebird');
+	 var MongooseDbManager = require ('./impl/mongoose_db_manager');
 
 	/**
 	 * @constructor
@@ -50,7 +50,7 @@
 		//});
 
 		//callback ( null, this.manager.saveAsync ( exchangeRateEntry ) );
-		return yield this.manager.saveAsync ( exchangeRateEntry );
+		return  yield this.manager.saveAsync ( exchangeRateEntry );
 	});
 
 	/**

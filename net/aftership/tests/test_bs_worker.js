@@ -1,7 +1,8 @@
 'use strict'
 
 var beanstalkd_config = require('../config/beanstalk.config');
-//var Beanworker = require('fivebeans').worker;
+
+var Beanworker = require('fivebeans').worker;
 
 var ExchangeRateConverter = require ('../worker/exchange_rate_converter');
 //var ExchangeRateJobHandler = require('../handler/exchange_rate_job_handler');

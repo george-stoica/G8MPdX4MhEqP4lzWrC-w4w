@@ -70,7 +70,7 @@
 		}
 
 		try {
-		
+
 			// start processing the job
 			self.handler.work ( job, function ( result, delay ) {
 
@@ -82,14 +82,15 @@
 				    result : result
 				} );
 
+				console.log('current job result ' + result + ' and ' + self.handler.RESPONSE_RELEASE);
 				switch ( result ) {
-				case self.handler.RESPONSE_SUCCESS:
+				case 'sucess':
 
 					self.emitInfo ( 'Successfully handled job: ' + jobID );
 					self.deleteAndMoveOn ( jobID );
 					break;
 
-				case self.handler.RESPONSE_RELEASE:
+				case 'release':
 				
 					self.emitInfo ( 'Released Job: ' + jobID );
 					// if delay is provided, put job back with the specified delay.

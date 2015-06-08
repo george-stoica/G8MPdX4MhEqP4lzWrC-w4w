@@ -9,7 +9,9 @@ var job_config = {
 			to: 'HKD',
 			type: 'exchange_rate_handler',
 			succeeded_attempts:0,
-			failed_attempts:0
+			failed_attempts:0,
+			delay_success: 3, 
+			delay_fail: 3
 		}
 	};
 
