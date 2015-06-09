@@ -68,8 +68,23 @@ node install
 The worker should be executed using the `--harmony` command line parameter because of the use of generators in the source code:
 
 ```
-node --harmony [start workers].js
+node --harmony start_worker_cluster.js.js
 ```
+#### Run workers
+
+##### Run single worker
+```
+node --harmony start_worker.js
+```
+
+#####Run as cluster
+
+```
+node --harmony start_worker_cluster.js [number of workers]
+```
+
+If the `[number of workers]` parameter is not specified the number of workers to be initialized will be the number of processors available on the machine.
+
 
 ## The challenge
 ---
