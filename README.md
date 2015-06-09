@@ -41,6 +41,7 @@ The following dependencies are required:
 * fivebeans
 * accounting
 * mongoose
+* request
 
 
 #### Job payload

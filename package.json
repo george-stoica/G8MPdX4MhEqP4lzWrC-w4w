@@ -1,18 +1,32 @@
 {
   "name": "exchange_rate_worker",
   "version": "1.0.0",
-  "description": "Processes exchange rate requests and saves responses to DB",
-  "main": "index.js",
+  "description": "Retrieves exchange rate from web service and saves it to DB.",
+  "main": "net/aftership/handler/exchange_rate_job_handler.js",
+  "dependencies": {
+    "accounting": "^0.4.1",
+	"co": "^4.5.4",
+	"fivebeans": "^1.2.0",
+	"bluebird": "^2.9.27",
+	"mongoose": "^3.8",
+	"request": "^2.57.0"
+  },
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "george-stoica",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/george-stoica/G8MPdX4MhEqP4lzWrC-w4w.git"
+  },
+  "keywords": [
+    "exchange",
+    "rate"
+  ],
+  "author": "george stoica",
   "license": "ISC",
-  "dependencies": {
-		"co": ">=4.5.4",
-		"fivebeans": ">=1.2.0",
-		"bluebird": ">=2.9.27",
-		"accounting": ">=0.4.1",
-		"mongoose": "3.8"
-  }
+  "bugs": {
+    "url": "https://github.com/george-stoica/G8MPdX4MhEqP4lzWrC-w4w/issues"
+  },
+  "homepage": "https://github.com/george-stoica/G8MPdX4MhEqP4lzWrC-w4w#readme"
 }
