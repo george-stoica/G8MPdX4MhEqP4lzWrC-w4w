@@ -41,7 +41,6 @@ The following dependencies are required:
 * fivebeans
 * accounting
 * mongoose
-* cluster
 
 
 #### Job payload
@@ -67,7 +66,7 @@ The request must include a unique key provided after signing up. The response co
 #### Installation
 Run the following command to install dependencies.
 ```
-node install
+npm install
 ```
 
 #### Note
