@@ -57,7 +57,6 @@
 		* put job on the tube with low priority
 		*/
 		function putJobOnTube ( delay ) {
-			console.log ( 'Delaying job by ' + delay );
 			
 			self.client.put ( fivebeans.client.LOWEST_PRIORITY, delay, 60, JSON.stringify ( job ), function ( err, new_job_id ) {
 

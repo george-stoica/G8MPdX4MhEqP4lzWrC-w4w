@@ -21,7 +21,6 @@
 	* @constructor
 	*/
 	function ExchangeRateService ( response_handler ) {
-		console.log ('creating XR service with handler ' + response_handler);
 		this.response_handler = response_handler;
 	}
 
@@ -40,8 +39,7 @@
 
 			// check for response error
 			if ( error || response.statusCode != 200 ) {
-			
-				//console.log ( 'error:' + error.stack );
+
 				return callback ( error );
 				
 			}
@@ -54,7 +52,7 @@
 			}
 
 			// return exchange rate
-			callback ( null, self.response_handler.getRate ( quoteRequest, body ) );
+			callback ( null, computedRate );
 
 		} );
 	}

@@ -54,7 +54,7 @@
 
 	/**
 	* Opens a new connection to DB.
-	* @deprecated - initialization done on each save now.
+	* @deprecated - initialization done on object instantiation.
 	*/
 	MongooseDbManager.prototype.initialize = function ( callback ) {
 		console.log ( 'Initializing DB...' );
@@ -64,9 +64,6 @@
 		} );
 
 		this.conn = mongoose.connection;
-		
-		
-		console.log('return');
 		callback ( null );
 		
 	}
@@ -77,12 +74,9 @@
 	* @callback callback ( error, data )
 	*/
 	MongooseDbManager.prototype.save = function ( exchangeRateEntry, callback ) {
-			console.log ( 'SAVING DB...' + this.ExchangeRateModel );
-			
+			console.log ( 'SAVING to DB...' + JSON.stringify ( exchangeRateEntry ) );
 
-				
-			var self = this;
-		
+			var self = this;		
 			var exchRateEntry = new this.ExchangeRateModel ( {
 														from: exchangeRateEntry.from,
 														to: exchangeRateEntry.to,
@@ -90,23 +84,22 @@
 													});
 
 			// save data to DB
-			// @FIXME - should this run async?
 			exchRateEntry.saveAsync ().spread ( function ( exchRate ) {
 
 				console.log( 'Saved to db rate: ' + exchRate.rate );
 
-			}).then( function () { // do additional maintenance after successful save
-
-				// close connection to DB
-				//self.closeConnection ();
-				console.log('saved');
-				// return with success
-				callback (null, 'done');
+			}).then( function () { 
+				// do additional maintenance after successful save
+				console.log('entry successfully saved...');
+				
 			}).catch ( function ( error ) {
 			console.log('error saving' + error);
 				// return with error
 				callback (error);
 			});	
+
+			// return with success
+			callback (null, 'done');
 	}
 
 	/**
