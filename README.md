@@ -41,7 +41,7 @@ The following dependencies are required:
 * fivebeans
 * accounting
 * mongoose
-* request
+* cluster
 
 
 #### Job payload
@@ -58,6 +58,11 @@ The `succeeded_attempts` and `failed_attempts` properties are used to persist th
 
 Different workers can process the same job but the success and fail counters should not be reset.
 
+#### Currency Exchange API
+The API used to get the currency is the one provided by https://currencylayer.com/ .
+The request must include a unique key provided after signing up. The response comes in JSON form. The free service only allows getting exchange rates from USD to an array of others among which HKD.
+
+`Note`: a secondary API key is included in the exchange_rate_service.js file if the 1000 monthly request limit is reached.
 
 #### Installation
 Run the following command to install dependencies.

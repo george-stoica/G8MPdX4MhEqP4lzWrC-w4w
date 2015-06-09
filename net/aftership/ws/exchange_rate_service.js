@@ -8,7 +8,7 @@
 
 	// web service
 	var WEB_SERVICE_URI = 'http://apilayer.net/api/live?access_key=';
-	var API_KEY = '925fc1eb1e30523a9b472acea5d6c219';
+	var API_KEY = '925fc1eb1e30523a9b472acea5d6c219'; // secondary key: 69144a6b60e9b68557b4e1a7d5dbbc84. use this if reached 1000 monthly request limit.
 	var WEB_SERVICE_API_URL = WEB_SERVICE_URI + API_KEY;
 	
 	var request = require ( 'request' );
