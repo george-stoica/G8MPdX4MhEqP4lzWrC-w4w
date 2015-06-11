@@ -13,6 +13,7 @@
 	//var config = require ( '../config/exchange_rate_worker.config' );
 
 	var FiveBeansWorker = fivebeans.worker;
+	//var self = this;
 
 	/**
 	* @constructor
@@ -31,6 +32,8 @@
 
 		// set fivebeans handler used to process the jobs
 		this.handler = new ExchangeRateJobHandler ();
+		this.handlers = undefined;
+		//this.self = this;
 
 		FiveBeansWorker.call ( this, init_options );
 	}
@@ -41,7 +44,6 @@
 	( function () {
 
 		util.inherits ( ExchangeRateConverter, FiveBeansWorker );
-		this.handlers = undefined;
 		ExchangeRateConverter.prototype.callHandler = undefined;
 		ExchangeRateConverter.prototype.lookupHandler = undefined;
 	} () );
