@@ -4,7 +4,7 @@
 */
 ( function () {
 
-	'use strict'
+	'use strict';
 
 	var db_config = require ( '../../config/persistence.config' );
 	var promise = require ( 'bluebird' );
@@ -66,7 +66,7 @@
 		this.conn = mongoose.connection;
 		callback ( null );
 		
-	}
+	};
 
 	/**
 	* Saves Exchange rate response to DB.
@@ -100,7 +100,7 @@
 
 			// return with success
 			callback (null, 'done');
-	}
+	};
 
 	/**
 	* Closes connection to the DB.
@@ -118,7 +118,7 @@
 		}
 
 		callback ( new Error ( 'Error while attempting to close DB connection...' ) );
-	}
+	};
 
 	module.exports = MongooseDbManager;
-} () )
+} () );

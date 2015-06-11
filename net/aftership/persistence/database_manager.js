@@ -6,7 +6,7 @@
  */
 ( function () {
 
-	'use strict'
+	'use strict';
 
 	 var db_config = require ('../config/persistence.config');
 	 var co = require ('co');
@@ -48,8 +48,8 @@
 			console.log ( err.stack );
 			return false;
 		});
-	}
+	};
 
 	module.exports = DatabaseManager;
 
-}())
+}());

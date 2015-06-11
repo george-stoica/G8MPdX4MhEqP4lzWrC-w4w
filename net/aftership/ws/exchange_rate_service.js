@@ -4,7 +4,7 @@
 */
 ( function () {
 
-	'use strict'
+	'use strict';
 
 	// web service
 	var WEB_SERVICE_URI = 'http://apilayer.net/api/live?access_key=';
@@ -55,7 +55,7 @@
 			callback ( null, computedRate );
 
 		} );
-	}
+	};
 
 	module.exports = ExchangeRateService;
-}())
+}());

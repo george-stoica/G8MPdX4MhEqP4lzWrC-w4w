@@ -13,7 +13,7 @@
  */
 ( function () {
 
-	'use strict'
+	'use strict';
 
 	/**
 	* @constructor
@@ -39,7 +39,7 @@
 		console.log ( 'Rate key:' + rateKey + ' and value: ' + currencyExch.quotes[rateKey] );
 		var rate = parseFloat ( currencyExch.quotes[rateKey] );
 		
-		if ( rate !== NaN ) {
+		if ( rate !== NaN ) { //isNaN
 			// format rate to 2 decimals
 			rate = formatter.format ( rate, 2 );
 
@@ -47,7 +47,7 @@
 		}
 		
 		return NaN;
-	}
+	};
 
 	module.exports = ExchangeRateResponseHandler;
-}())
+}());

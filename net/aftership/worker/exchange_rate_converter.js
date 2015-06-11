@@ -3,7 +3,8 @@
 * @typedef {object} ExchangeRateConverter
 */
 ( function () {
-
+	'use strict';
+	
 	var fivebeans = require ( 'fivebeans' );
 	var util = require ( 'util' );
 //	var co = require ( 'co' );
@@ -43,7 +44,7 @@
 		this.handlers = undefined;
 		ExchangeRateConverter.prototype.callHandler = undefined;
 		ExchangeRateConverter.prototype.lookupHandler = undefined;
-	} () )
+	} () );
 
 	/**
 	* Override FiveBeansWorker's runJob method to process specific cases.
@@ -65,7 +66,7 @@
 				    id : jobID,
 				    error : err
 				} );
-			} )
+			} );
 		}
 
 		try {
@@ -116,7 +117,7 @@
 			
 			self.buryAndMoveOn ( jobID );
 		}
-	}
+	};
 
 	module.exports = ExchangeRateConverter;
-}())
+}());
