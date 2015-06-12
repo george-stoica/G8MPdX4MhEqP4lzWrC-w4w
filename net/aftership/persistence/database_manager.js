@@ -32,7 +32,7 @@
 	* @param {object} exchangeRateEntry - exchange rate details.
 	* @callback - @FIXME should this be removed ?
 	*/
-	DatabaseManager.prototype.save = co.wrap(function *(exchangeRateEntry, callback) {
+	DatabaseManager.prototype.save = co.wrap( function *( exchangeRateEntry, callback ) {
 		return  yield this.manager.saveAsync ( exchangeRateEntry );
 	});
 

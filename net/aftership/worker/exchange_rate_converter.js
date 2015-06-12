@@ -84,7 +84,7 @@
 				    result : result
 				} );
 
-				console.log('current job result ' + result + ' and ' + self.handler.RESPONSE_RELEASE);
+				console.log('current job result ' + result);
 				switch ( result ) {
 				case 'sucess':
 
